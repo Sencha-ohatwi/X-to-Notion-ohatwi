@@ -30,11 +30,17 @@ def exists(tweet_id):
 
 
 # ★ これが抜けてると今回のエラーになる
-feed = feedparser.parse(RSS_URL)
+RSS_URL = f"https://rss-bridge.org/bridge01/?action=display&bridge=TwitterBridge&u={USERNAME}&format=Atom"
+
+feed = feedparser.parse(
+    RSS_URL,
+    request_headers={
+        "User-Agent": "Mozilla/5.0 (X-to-Notion Bot)"
+    }
+)
 
 print("RSS URL:", RSS_URL)
 print("ENTRY COUNT:", len(feed.entries))
-
 
 for e in feed.entries:
     text = BeautifulSoup(e.summary, "html.parser").get_text()
@@ -73,16 +79,3 @@ for e in feed.entries:
         headers=headers,
         json=payload
     )
-
-feed = feedparser.parse(RSS_URL)
-
-print("RSS URL:", RSS_URL)
-print("ENTRY COUNT:", len(feed.entries))
-
-for e in feed.entries:
-    print("ENTRY FOUND")
-    text = BeautifulSoup(e.summary, "html.parser").get_text()
-    print("TEXT:", text)
-
-    if KEYWORD not in text:
-        continue
