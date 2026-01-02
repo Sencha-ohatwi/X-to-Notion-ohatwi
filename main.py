@@ -6,7 +6,7 @@ DB_ID = os.environ["NOTION_DB_ID"]
 USERNAME = os.environ["X_USERNAME"]
 KEYWORD = os.environ["KEYWORD"]
 
-RSS_URL = f"https://rsshub.app/twitter/user/{USERNAME}"
+RSS_URL = "https://rss-bridge.org/bridge01/?action=display&bridge=TwitterBridge&u=greentra_vrc&format=Atom"
 
 headers = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
@@ -51,7 +51,7 @@ for e in feed.entries:
         for m in e.media_content:
             if "url" in m:
                 imgs.append(m["url"])
-
+            
     payload = {
         "parent": {"database_id": DB_ID},
         "properties": {
