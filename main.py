@@ -32,14 +32,22 @@ def exists(tweet_id):
 # ★ これが抜けてると今回のエラーになる
 RSS_URL = f"https://rss-bridge.org/bridge01/?action=display&bridge=TwitterBridge&u={USERNAME}&format=Atom"
 
-feed = feedparser.parse(
+import requests
+import feedparser
+
+resp = requests.get(
     RSS_URL,
-    request_headers={
+    headers={
         "User-Agent": "Mozilla/5.0 (X-to-Notion Bot)"
-    }
+    },
+    timeout=30
 )
 
-print("RSS URL:", RSS_URL)
+print("HTTP STATUS:", resp.status_code)
+print("RAW LENGTH:", len(resp.text))
+
+feed = feedparser.parse(resp.text)
+
 print("ENTRY COUNT:", len(feed.entries))
 
 for e in feed.entries:
