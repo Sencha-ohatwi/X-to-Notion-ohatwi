@@ -1,1 +1,28 @@
+name: X to Notion
 
+on:
+  schedule:
+    - cron: "*/10 * * * *" # 10分ごと
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install requests feedparser beautifulsoup4
+
+      - name: Run script
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+          X_USERNAME: ${{ secrets.X_USERNAME }}
+          KEYWORD: ${{ secrets.KEYWORD }}
+        run: python main.py
