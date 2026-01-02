@@ -6,42 +6,23 @@ DB_ID = os.environ["NOTION_DB_ID"]
 USERNAME = os.environ["X_USERNAME"]
 KEYWORD = os.environ["KEYWORD"]
 
-RSS_URL = f"https://nitter.poast.org/{USERNAME}/rss"
-
-headers = {
-    "Authorization": f"Bearer {NOTION_TOKEN}",
-    "Notion-Version": "2022-06-28",
-    "Content-Type": "application/json"
-}
-
-def exists(tweet_id):
-    q = {
-        "filter": {
-            "property": "取得ID",
-            "rich_text": {"equals": tweet_id}
-        }
-    }
-    r = requests.post(
-        f"https://api.notion.com/v1/databases/{DB_ID}/query",
-        headers=headers,
-        json=q
-    )
-    return len(r.json()["results"]) > 0
-
-feed = feedparser.parse(RSS_URL)
+RSS_URL = f"https://rsshub.app/twitter/user/{USERNAME}"
 
 for e in feed.entries:
     text = BeautifulSoup(e.summary, "html.parser").get_text()
 
-    if KEYWORD not in text:
+    if KEYWORD.lower() not in text.lower():
         continue
 
     tweet_id = e.link.split("/")[-1]
     if exists(tweet_id):
         continue
 
-    soup = BeautifulSoup(e.summary, "html.parser")
-    imgs = [img["src"] for img in soup.find_all("img")]
+    imgs = []
+    if "media_content" in e:
+        for m in e.media_content:
+            if "url" in m:
+                imgs.append(m["url"])
 
     payload = {
         "parent": {"database_id": DB_ID},
