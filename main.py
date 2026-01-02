@@ -6,7 +6,7 @@ DB_ID = os.environ["NOTION_DB_ID"]
 USERNAME = os.environ["X_USERNAME"]
 KEYWORD = os.environ["KEYWORD"]
 
-RSS_URL = f"https://nitter.net/{USERNAME}/rss"
+RSS_URL = f"https://nitter.poast.org/{USERNAME}/rss"
 
 headers = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
