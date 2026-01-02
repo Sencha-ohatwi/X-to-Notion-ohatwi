@@ -64,3 +64,16 @@ for e in feed.entries:
         headers=headers,
         json=payload
     )
+
+feed = feedparser.parse(RSS_URL)
+
+print("RSS URL:", RSS_URL)
+print("ENTRY COUNT:", len(feed.entries))
+
+for e in feed.entries:
+    print("ENTRY FOUND")
+    text = BeautifulSoup(e.summary, "html.parser").get_text()
+    print("TEXT:", text)
+
+    if KEYWORD not in text:
+        continue
