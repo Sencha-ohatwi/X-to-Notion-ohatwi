@@ -8,6 +8,34 @@ KEYWORD = os.environ["KEYWORD"]
 
 RSS_URL = f"https://rsshub.app/twitter/user/{USERNAME}"
 
+headers = {
+    "Authorization": f"Bearer {NOTION_TOKEN}",
+    "Notion-Version": "2022-06-28",
+    "Content-Type": "application/json"
+}
+
+def exists(tweet_id):
+    q = {
+        "filter": {
+            "property": "取得ID",
+            "rich_text": {"equals": tweet_id}
+        }
+    }
+    r = requests.post(
+        f"https://api.notion.com/v1/databases/{DB_ID}/query",
+        headers=headers,
+        json=q
+    )
+    return len(r.json()["results"]) > 0
+
+
+# ★ これが抜けてると今回のエラーになる
+feed = feedparser.parse(RSS_URL)
+
+print("RSS URL:", RSS_URL)
+print("ENTRY COUNT:", len(feed.entries))
+
+
 for e in feed.entries:
     text = BeautifulSoup(e.summary, "html.parser").get_text()
 
